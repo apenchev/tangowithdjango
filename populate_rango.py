@@ -46,6 +46,16 @@ def populate():
 		title="Flask",
 		url="http://flask.pocoo.org")
 
+	name_cat = add_cat("Atanas Penchev", views=4, likes=3)
+
+	add_page(cat=name_cat,
+                 title="Eloquent JavaScript",
+                 url="http://eloquentjavascript.net/")
+
+        add_page(cat=name_cat,
+                 title="Discover Meteor",
+                 url="https://www.discovermeteor.com/")
+
 	# Print out what we have added to the user.
 	for c in Category.objects.all():
 		for p in Page.objects.filter(category=c):
