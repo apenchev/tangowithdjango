@@ -49,12 +49,12 @@ def populate():
 	name_cat = add_cat("Atanas Penchev", views=4, likes=3)
 
 	add_page(cat=name_cat,
-                 title="Eloquent JavaScript",
-                 url="http://eloquentjavascript.net/")
+                 title="Github",
+                 url="https://github.com/apenchev")
 
         add_page(cat=name_cat,
-                 title="Discover Meteor",
-                 url="https://www.discovermeteor.com/")
+                 title="Python Everywhere",
+                 url="http://apenchev.pythonanywhere.com/")
 
 	# Print out what we have added to the user.
 	for c in Category.objects.all():
