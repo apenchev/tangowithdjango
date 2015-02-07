@@ -32,6 +32,7 @@ def category(request, category_name_slug):
         # We also add the category object from the database to the context dictionary.
         # We'll use this in the template to verify that the category exists.
         context_dict['category'] = category
+        context_dict['category_name_slug'] = category.slug
     except Category.DoesNotExist:
         # We get here if we didn't finf the specified category.
         # Don't do anything - the template displays the "no category" message for us.
