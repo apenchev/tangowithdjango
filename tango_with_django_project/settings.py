@@ -87,7 +87,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-	STATIC_PATH,
+    STATIC_PATH,
 )
 
 MEDIA_URL = '/media/'
@@ -95,3 +95,5 @@ MEDIA_URL = '/media/'
 TEMPLATE_DIRS = [
     TEMPLATE_PATH,
 ]
+
+LOGIN_URL = '/rango/login/'
