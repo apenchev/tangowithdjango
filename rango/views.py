@@ -41,7 +41,7 @@ def category(request, category_name_slug):
         pass
 
     # Go render the response and return it to the client.
-    return render(request, '/category.html', context_dict)
+    return render(request, 'rango/category.html', context_dict)
 
 @login_required
 def add_category(request):
