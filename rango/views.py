@@ -43,7 +43,14 @@ def index(request):
     return response
 
 def about(request):
-    return render(request, 'rango/about.html')
+    # If the visits sessions variable exists, take it and use it.
+    # It it doesn't, we haven't visited the site so set the count to zero.
+    if request.session.get('visits'):
+        count = request.session.get('visits')
+    else:
+        count = 0
+
+    return render(request, 'rango/about.html', {'visits': count})
 
 def category(request, category_name_slug):
     # Create a context dictionary which we can pass to the template rendering engine.
