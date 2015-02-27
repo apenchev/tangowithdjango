@@ -2,35 +2,52 @@
 
 {% load staticfiles %}
 
+{% block title %}Index{% endblock %}
+
 {% block body_block %}
 
     <div class="page-header">
         {% if user.is_authenticated %}
-            <h1>Rango says... hello {{  user.username }}</h1>
+            <h1>Rango says... hello {{ user.username }}</h1>
         {% else %}
             <h1>Rango says... hello world!</h1>
         {% endif %}
     </div>
 
-    {% if categories %}
-        <ul>
-            {% for category in categories %}
-                <li><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>There are no categories present.</strong>
-    {% endif %}
+    <div class="row placeholders">
 
-    <h1>Popular pages</h1>
-    {% if pages %}
-        <ul>
-            {% for page in pages %}
-                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>There are no pages.</strong>
-    {% endif %}
+        <div class="col-xs-12 col-sm-6 placeholder">
+            <div class="panel panel-primary"><div class="panel-heading">
+                <h3 class="panel-title">Categories</h3>
+            </div></div>
+
+            {% if categories %}
+                <ul class="list-group">
+                    {% for category in categories %}
+                        <li class="list-group-item"><a href="{% url 'category' category.slug %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>There are no categories present.</strong>
+            {% endif %}
+        </div>
+
+        <div class="col-xs-12 col-sm-6 placeholder">
+            <div class="panel panel-primary"><div class="panel-heading">
+                <h3 class="panel-title">Popular pages</h3>
+            </div></div>
+
+            {% if pages %}
+                <ul class="list-group">
+                    {% for page in pages %}
+                        <li class="list-group-item"><a href="{{ page.url }}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>There are no pages.</strong>
+            {% endif %}
+        </div>
+
+    </div>
 
 {% endblock %}
