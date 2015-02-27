@@ -16,6 +16,7 @@
             <ul>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'restricted' %}">Restricted</a></li>
+                <li><a href="{% url 'auth_password_reset' %}">Password Reset</a></li>
                 <li><a href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
                 <li><a href="{% url 'add_category' %}">Add a New Category</a></li>
             {% else %}
