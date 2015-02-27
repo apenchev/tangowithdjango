@@ -1,15 +1,55 @@
+from datetime import datetime
+
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
+
 from rango.models import Category, Page
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 def index(request):
+
     category_list = Category.objects.order_by('-likes')[:5]
     page_list = Page.objects.order_by('views')[:5]
     context_dict = {'categories': category_list, 'pages': page_list}
-    return render(request, 'rango/index.html', context_dict)
+
+    # Get the number of visits to the site.
+    # We use the COOKIES.get() function to obtain the visits cookie.
+    # If the cookie exists, the value returned is casted to an integer.
+    # If the cookie doesn't exist, we default to zero and cast that.
+    visits = int(request.COOKIES.get('visits', '1'))
+
+    reset_last_visit_time = False
+    response = render(request, 'rango/index.html', context_dict)
+    
+    # Does the cookie last_visit exist?
+    if 'last_visit' in request.COOKIES:
+        # Yes it does! Get the cookie's value.
+        last_visit = request.COOKIES['last_visit']
+        # Cast the value to a Python date/time object.
+        last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+
+        # If it's been more than a day since the last visit.
+        if (datetime.now() - last_visit_time).days > 0:
+            visits = visits + 1
+            # ...and flag that the cookie last visit needs to be updated
+            reset_last_visit_time = True
+    else:
+        # Cookie last_visit doesn't exist, so flag that it should be set.
+        reset_last_visit_time = True
+
+        context_dict['visits'] = visits
+
+        # Obtain our Response object early so we can add cookie information.
+        response = render(request, 'rango/index.html', context_dict)
+
+    if reset_last_visit_time:
+        response.set_cookie('last_visit', datetime.now())
+        response.set_cookie('visits', visits)
+
+    # Return response back to the user, updating any cookies that need change.
+    return response
 
 def about(request):
     return render(request, 'rango/about.html')
