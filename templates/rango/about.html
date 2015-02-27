@@ -6,9 +6,16 @@
 
 {% block body_block %}
 
-	This tutorial has been put together by Atanas Penchev, 2072742<br>
-	<img src="{% static 'images/avatar.jpg' %}" alt="Avatar" width="150">
+    <div class="page-header">
+        <h1>About</h1>
+    </div>
+    <div>
 
-	<p>Visits of the main page: {{ visits }}</p>
+        This tutorial has been put together by Atanas Penchev, 2072742<br>
+        <img src="{% static 'images/avatar.jpg' %}" alt="Avatar" width="150">
+
+        <p>Visits of the main page: {{ visits }}</p>
+
+    </div>
 
 {% endblock %}

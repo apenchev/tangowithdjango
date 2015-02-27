@@ -5,8 +5,10 @@
 {% block title %}Add Page{% endblock %}
 
 {% block body_block %}
-
-    <h1>Add a Page</h1>
+    
+    <div class="page-header">
+        <h1>Add a Page</h1>
+    </div>
 
     <form id="page_form" method="post" action="{% url 'add_page' category.slug %}">
 
