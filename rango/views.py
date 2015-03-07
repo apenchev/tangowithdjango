@@ -67,7 +67,7 @@ def category(request, category_name_slug):
 
         # Retreive all of the associated pages.
         # Note that filter returns >= 1 model instance.
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         # Adss our results list to the template context under name pages.
         context_dict['pages'] = pages
@@ -80,33 +80,30 @@ def category(request, category_name_slug):
         # Don't do anything - the template displays the "no category" message for us.
         pass
 
-    # Go render the response and return it to the client.
-    return render(request, 'rango/category.html', context_dict)
-
-def search(request):
-    result_list = []
-
     if request.method == 'POST':
         query = request.POST['query'].strip()
 
         if query:
             # Run our Bing function to get the results list!
-            result_list = run_query(query)
+            context_dict['result_list'] = run_query(query)
 
-    return render(request, 'rango/search.html', {'result_list': result_list})
+    # Go render the response and return it to the client.
+    return render(request, 'rango/category.html', context_dict)
 
 def track_url(request):
+    page_id = None
     url = '/rango/'
 
-    if request.method == 'GET' and 'page_id' in request.GET:
-        page_id = request.GET['page_id']
-        try:
-            page = Page.objects.get(id=page_id)
-            page.views = page.views + 1
-            page.save()
-            url = page.url
-        except:
-            pass
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.url
+            except:
+                pass
 
     return redirect(url)
 
