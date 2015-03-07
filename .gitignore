@@ -56,5 +56,8 @@ target/
 # PyCharm
 .idea/
 
+# Database
+*.sqlite3
+
 # Custom files
 rango/keys.py

@@ -1,6 +1,15 @@
 import json
 import urllib, urllib2
-import keys.BING_API_KEY
+from keys import BING_API_KEY
+
+def main():
+    print 'Enter your search query: '
+    results = run_query(raw_input())[:10]
+    for i, result in enumerate(results):
+        print 'Rank:', i + 1
+        print 'Title:', result['title']
+        print 'URL:', result['link']
+        print '---'
 
 def run_query(search_terms):
     # Specify the base
@@ -63,3 +72,6 @@ def run_query(search_terms):
 
     # Return the list of results to the calling function.
     return results
+
+if __name__ == '__main__':
+    main()
