@@ -57,7 +57,7 @@ target/
 .idea/
 
 # Database
-*.sqlite3
+db.sqlite3
 
 # Custom files
 rango/keys.py
