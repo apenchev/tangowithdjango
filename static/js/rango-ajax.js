@@ -14,3 +14,14 @@ $('#suggestion').keyup(function () {
     $('#cats').html(data);
   });
 });
+
+$('.rango-add').click(function() {
+  console.log('asdfds');
+  var catid, title, url;
+  catid = $(this).attr('data-catid');
+  title = $(this).attr('data-title');
+  url = $(this).attr('data-url');
+  $.get('/rango/auto_add_page/', {category_id: catid, title: title, url: url}, function(data) {
+    $('#pages').html(data);
+  });
+});

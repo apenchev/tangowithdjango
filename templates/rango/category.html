@@ -11,25 +11,26 @@
     </div>
     
     {% if category %}
-        {% if pages %}
-            <ul>
-                {% for page in pages %}
-                    <li>
-                        <a href="{% url 'goto' %}?page_id={{ page.id }}">
-                            {{ page.title }}
-                        </a>
-                        {% if page.views > 1 %}
-                            ({{ page.views }} views)
-                        {% elif page.views == 1 %}
-                            ({{ page.views }} view)
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>No pages currently in the category.</strong>
-        {% endif %}
-
+        <div id="pages">
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li>
+                            <a href="{% url 'goto' %}?page_id={{ page.id }}">
+                                {{ page.title }}
+                            </a>
+                            {% if page.views > 1 %}
+                                ({{ page.views }} views)
+                            {% elif page.views == 1 %}
+                                ({{ page.views }} view)
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>No pages currently in the category.</strong>
+            {% endif %}
+        </div>
         <p>
             <strong id="like_count">{{ category.likes }}</strong> people like this category
             {% if user.is_authenticated %}
@@ -90,6 +91,16 @@
                                     </h4>
                                     <p class="list-group-item-text">
                                         {{ result.summary }}
+
+                                        <button
+                                            data-catid="{{ category.id }}"
+                                            data-title="{{ result.title }}"
+                                            data-url="{{ result.link }}"
+                                            class="rango-add btn btn-mini btn-info"
+                                            type="button"
+                                        >
+                                            Add
+                                        </button>
                                     </p>
                                 </li>
                             {% endfor %}
