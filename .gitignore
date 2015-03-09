@@ -60,4 +60,4 @@ target/
 db.sqlite3
 
 # Custom files
-rango/keys.py
+rango/_keys.py
