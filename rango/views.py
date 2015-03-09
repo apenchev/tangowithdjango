@@ -61,9 +61,9 @@ def category(request, category_name_slug):
     context_dict['query'] = None
 
     if request.method == 'POST':
-        query = request.POST['query'].strip()
-
-        if query:
+        
+        if request.POST['query']:
+            query = request.POST['query'].strip()
             # Run our Bing function to get the results list!
             result_list = run_query(query)
 
