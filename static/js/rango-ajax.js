@@ -16,7 +16,6 @@ $('#suggestion').keyup(function () {
 });
 
 $('.rango-add').click(function() {
-  console.log('asdfds');
   var catid, title, url;
   catid = $(this).attr('data-catid');
   title = $(this).attr('data-title');
