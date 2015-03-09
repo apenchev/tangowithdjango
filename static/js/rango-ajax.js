@@ -20,7 +20,9 @@ $('.rango-add').click(function() {
   catid = $(this).attr('data-catid');
   title = $(this).attr('data-title');
   url = $(this).attr('data-url');
+  var $this = $(this);
   $.get('/rango/auto_add_page/', {category_id: catid, title: title, url: url}, function(data) {
     $('#pages').html(data);
+    $this.hide();
   });
 });
