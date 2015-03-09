@@ -4,10 +4,10 @@ from django.contrib import admin
 
 from registration.backends.simple.views import RegistrationView
 
-# Create a new class that redirects the user to the index page, if successful at logging
+# Create a new class that redirects the user to the add profile page, if successful at logging
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, request, user):
-        return '/rango/'
+        return '/rango/add_profile/'
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

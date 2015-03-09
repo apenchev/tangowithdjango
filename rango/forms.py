@@ -29,8 +29,8 @@ class PageForm(forms.ModelForm):
         # Here, we are hiding the foreign key.
         # we can either exclude the category field from the form,
         exclude = ('category',)
-        #or specify the fields to include (i.e. not include the category field)
-        #fields = ('title', 'url', 'views')
+        # or specify the fields to include (i.e. not include the category field)
+        # fields = ('title', 'url', 'views')
 
     def clean(self):
         cleaned_data = self.cleaned_data

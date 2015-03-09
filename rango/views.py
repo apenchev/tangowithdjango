@@ -1,12 +1,12 @@
 from datetime import datetime
 
+from django.db import IntegrityError
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
 
-from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
+from rango.models import Category, Page, UserProfile, User
+from rango.forms import CategoryForm, PageForm, UserProfileForm
 
 from rango.bing_search import run_query
 
@@ -114,6 +114,144 @@ def track_url(request):
                 pass
 
     return redirect(url)
+
+@login_required
+def register_profile(request):
+    # Check if user has a profile
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+        return redirect('profile')
+    except UserProfile.DoesNotExist:
+        pass
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of UserProfileForm.
+        form = UserProfileForm(data=request.POST)
+
+        # If the form is valid...
+        if form.is_valid():
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile = form.save(commit=False)
+            profile.user = request.user
+            
+            # Did the user provide a profile picture?
+            # If so, we need to get it from the input form and put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            # Now we save the UserProfile model instance.
+            profile.save()
+
+            return redirect('profile')
+
+        # Invalid form - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            print form.errors
+    
+    # Not a HTTP POST, so we render our form using the ModelForm instance.
+    # This form will be blank, ready for user input.
+    else:
+        form = UserProfileForm()
+
+    # Render the template depending on the context.
+    return render(request, 'registration/profile_registration.html', {'form': form})
+
+@login_required
+def profile(request):
+    # Check if user has a profile
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        return redirect('add_profile')
+
+    context_dict = {}
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of UserProfileForm.
+        form = UserProfileForm(data=request.POST)
+
+        # If the form is valid...
+        if form.is_valid():
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile_new = form.save(commit=False)
+            profile_new.user = request.user
+
+            # Did the user provide a profile picture?
+            # If so, we need to get it from the input form and put it in the UserProfile model.
+            if 'picture' in request.FILES:
+                profile_new.picture = request.FILES['picture']
+            elif profile.picture:
+                profile_new.picture = profile.picture
+
+            # Now we save the UserProfile model instance.
+            try:
+                profile_new.save()
+            except IntegrityError:
+                profile.delete()
+                profile_new.save()
+
+        # Invalid form - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            print form.errors
+
+        return redirect('profile')
+
+    # Not a HTTP POST, so we render our form using the ModelForm instance.
+    # This form will be blank, ready for user input.
+    else:
+        form = UserProfileForm()
+
+    context_dict['form'] = form
+    context_dict['website'] = profile.website
+    context_dict['picture'] = profile.picture
+
+    # Render the template depending on the context.
+    return render(request, 'rango/profile.html', context_dict)
+
+@login_required
+def users(request):
+    # List all users
+    users = User.objects.all()
+    return render(request, 'rango/users.html', {'users': users})
+
+@login_required
+def otherprofile(request, username):
+    # Check if it's the logged in user
+    if username == request.user.username:
+        return redirect('profile')
+
+    # Check if user exists
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('index')
+
+    # Check if user has a profile
+    profile = None
+    try:
+        profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        return HttpResponse('There is no profile registered for this user.')
+
+    # Display the user's profile
+    return render(request, 'rango/otherprofile.html', {
+        'username': username,
+        'email': user.email,
+        'website': profile.website,
+        'picture': profile.picture
+    })
 
 @login_required
 def add_category(request):

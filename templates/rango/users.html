@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block body_block %}
+    <div class="page-header">
+        <h1>Users</h1>
+    </div>
+
+    {% if users %}<ul class="list-group">
+        {% for u in users %}
+            <li class="list-group-item">
+                <a href="{% url 'otherprofile' u.username %}">
+                    {{ u.username }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>{% endif %}
+{% endblock %}
